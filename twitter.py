@@ -122,7 +122,7 @@ print ("")
 print ("Number of tweets with video: {0}".format(tweets_with_videos))
 print ("Number of likes on these tweets: {0}".format(likeCountVideo))
 print ("Number of retweets of these tweets: {0}".format(retweetCountVideo))
-if tweets_with_videos:
+if tweets_with_videos > 0:
   temp = likeCountVideo/tweets_with_videos
   print ("Average number of likes on tweets with video: {0}".format(temp))
   temp = retweetCountVideo/tweets_with_videos
