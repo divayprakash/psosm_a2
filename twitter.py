@@ -6,6 +6,9 @@ import jsonpickle
 from datetime import datetime
 from datetime import timedelta
 from collections import Counter
+import plotly
+from plotly.offline import plot
+import plotly.graph_objs as go
 
 ########## CONNECTING TO TWITTER API USING TWEEPY ##########
 auth = tweepy.AppAuthHandler(config.twitter['API_KEY'], config.twitter['API_SECRET'])
@@ -16,10 +19,10 @@ if (not api):
   sys.exit(-1)
 
 ########## DEFINE VARIABLES ##########
-user = "@DelhiPolice"
-fname = "delhipolice.json"
-#user = "@bostonpolice"
-#fname = "bostonpolice.json"
+#user = "@DelhiPolice"
+#fname = "delhipolice.json"
+user = "@bostonpolice"
+fname = "bostonpolice.json"
 tweets = []
 likeCount = 0
 likeCountText = 0
@@ -34,6 +37,7 @@ tweets_with_text = 0
 tweets_with_images = 0
 tweets_with_videos = 0
 retweet_ids = []
+tweets_dates = []
 dateStart = datetime.strptime('1 August 2017, 00:00:00', '%d %B %Y, %H:%M:%S')
 dateEnd = datetime.strptime('8 September 2017, 00:00:00', '%d %B %Y, %H:%M:%S')
 lessCount = 0
@@ -44,6 +48,8 @@ with open(fname, 'w') as f:
   for tweet in tweepy.Cursor(api.user_timeline, id=user, exclude_replies=1).items():
     datetime = tweet.created_at
     datetime = datetime - timedelta(hours=7)
+    string_date = datetime.strftime('%d %B %Y')
+    tweets_dates.append(string_date)
     #print type(tweet) #<class 'tweepy.models.Status'>
     obj = jsonpickle.encode(tweet._json, unpicklable=False)
     #print type(obj) #<type 'str'>
@@ -98,6 +104,29 @@ print ("Frequency of tweets by {0}: {1} tweets per day".format(user, avg))
 print ("Number of likes on these tweets: {0}".format(likeCount))
 print ("Number of retweets of these tweets: {0}".format(retweetCount))
 print ("")
+
+dates_dict = {}
+for date in tweets_dates:
+  if date in dates_dict:
+    dates_dict[date] = dates_dict[date] + 1
+  else:
+    dates_dict[date] = 1
+dates = dates_dict.keys()
+dates_sorted = sorted(dates, key=lambda date: datetime.strptime(date, '%d %B %Y'))
+keys = dates_sorted
+values = []
+for date in dates_sorted:
+  values.append(dates_dict[date])
+plot(
+  [go.Scatter(
+    x=keys,
+    y=values
+  )],
+  show_link=False,
+  filename='Tweet Frequency Graph.html',
+  image='svg',
+  image_filename='line'
+)
 
 print ("Number of tweets with text only: {0}".format(tweets_with_text))
 print ("Number of likes on these tweets: {0}".format(likeCountText))
