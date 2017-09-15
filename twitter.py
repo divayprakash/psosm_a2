@@ -28,6 +28,7 @@ likeCount = 0
 likeCountText = 0
 likeCountImage = 0
 likeCountVideo = 0
+retweetedCount = 0
 retweetCount = 0
 retweetCountText = 0
 retweetCountImage = 0
@@ -57,17 +58,18 @@ with open(fname, 'w') as f:
     #print type(data) #<type 'dict'>
     if datetime >= dateStart and datetime <= dateEnd:
       tweetCount = tweetCount + 1
-      likeCount = likeCount + data['favorite_count']
-      retweetCount = retweetCount + data['retweet_count']
       text = data['text'].encode('utf-8')
       text = str.lower(text)
       if text[0:2] == 'rt':
+        retweetedCount = retweetedCount + 1
         id = data['retweeted_status']['user']['id']
         screen_name = data['retweeted_status']['user']['screen_name']
         name = data['retweeted_status']['user']['name']
         key = str(id) + " " + screen_name + " " + name
         retweet_ids.append(key)
       else:
+        likeCount = likeCount + data['favorite_count']
+        retweetCount = retweetCount + data['retweet_count']
         # get count of tweets containing media
         try:
           if 'media' not in data['entities']:
@@ -99,12 +101,19 @@ with open(fname, 'w') as f:
 print "Done!"
 print ""
 avg = tweetCount/38.0
+originalTweetCount = tweetCount - retweetedCount
+originalAvg = originalTweetCount/38.0
 print ("No. of tweets by {0}: {1}".format(user, tweetCount))
 print ("Frequency of tweets by {0}: {1} tweets per day".format(user, avg))
+print ("No. of ORIGINAL tweets by {0}: {1}".format(user, originalTweetCount))
+print ("Frequency of ORIGINAL tweets by {0}: {1} tweets per day".format(user, originalAvg))
+print ("")
+print ("IMP: Like/Retweet count is only for original tweets by handle and does not include retweets as that taints data")
+print ("")
 print ("Number of likes on these tweets: {0}".format(likeCount))
 print ("Number of retweets of these tweets: {0}".format(retweetCount))
-likeAvg = likeCount/tweetCount
-retweetAvg = retweetCount/tweetCount
+likeAvg = likeCount/originalTweetCount
+retweetAvg = retweetCount/originalTweetCount
 likeScore = likeAvg * 0.25
 retweetScore = retweetAvg * 0.75
 engagementScore = likeScore + retweetScore
