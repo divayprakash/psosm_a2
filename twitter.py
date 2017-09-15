@@ -101,8 +101,8 @@ print ""
 avg = tweetCount/38.0
 print ("No. of tweets by {0}: {1}".format(user, tweetCount))
 print ("Frequency of tweets by {0}: {1} tweets per day".format(user, avg))
-print ("Number of likes on these tweets: {0}".format(likeCount))
-print ("Number of retweets of these tweets: {0}".format(retweetCount))
+#print ("Number of likes on these tweets: {0}".format(likeCount))
+#print ("Number of retweets of these tweets: {0}".format(retweetCount))
 print ("")
 
 dates_dict = {}
