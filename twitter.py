@@ -101,8 +101,14 @@ print ""
 avg = tweetCount/38.0
 print ("No. of tweets by {0}: {1}".format(user, tweetCount))
 print ("Frequency of tweets by {0}: {1} tweets per day".format(user, avg))
-#print ("Number of likes on these tweets: {0}".format(likeCount))
-#print ("Number of retweets of these tweets: {0}".format(retweetCount))
+print ("Number of likes on these tweets: {0}".format(likeCount))
+print ("Number of retweets of these tweets: {0}".format(retweetCount))
+likeAvg = likeCount/tweetCount
+retweetAvg = retweetCount/tweetCount
+likeScore = likeAvg * 0.25
+retweetScore = retweetAvg * 0.75
+engagementScore = likeScore + retweetScore
+print ("Engagement score for {0}: {1}".format(user, engagementScore))
 print ("")
 
 dates_dict = {}
