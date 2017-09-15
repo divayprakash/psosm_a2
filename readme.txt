@@ -1,7 +1,7 @@
 Prerequisites for running ‘twitter.py’ script -
 - Tweepy
+- JSON, jsonpickle
 - Plotly for Python
-- NLTK
 - Config file ‘config.py’ containing the following 3 lines -
   - twitter = {'API_KEY': '', 'API_SECRET': ''}
   - plotly = {'API_KEY': ''}
